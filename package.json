@@ -1,17 +1,20 @@
 {
-  "name": "oanda-downloader-node",
+  "name": "oanda-download",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "bin": {
+    "oanda-download": "./cli.js"
+  },
   "scripts": {
     "start": "node index.js",
     "test": "mocha --exit 'tests/**/*.spec.js'"
   },
   "keywords": [],
-  "author": "",
+  "author": "Manuel Limones",
   "license": "ISC",
   "dependencies": {
-    "@oanda/v20": "^3.0.18-16",
+    "commander": "^2.14.1",
     "json2csv": "^4.0.0-alpha.0",
     "moment": "^2.20.1",
     "superagent": "^3.8.2"
@@ -19,5 +22,6 @@
   "devDependencies": {
     "chai": "^4.1.2",
     "mocha": "^5.0.1"
-  }
+  },
+  "repository": "github:elimones/oanda-download"
 }

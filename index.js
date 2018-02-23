@@ -1,12 +1,6 @@
 const oanda = require('./oanda');
 const storage = require('./storage');
-const process = require('process');
 
-const api_key = process.env.OANDA_KEY;
-console.log(api_key);
-
-
-const resorceName = 'EUR_USD';
 const headers = [
   {label: 'time', value: 'time'},
   {label: 'open', value: 'mid.o'},
@@ -16,28 +10,17 @@ const headers = [
   {label: 'volume', value: 'volume'},
 ];
 
-async function main(){;
+async function main({instrument, maxDate, minDate, filename, key}) {;
   let candles;
-  let upTo = null;
-  for(let i = 0; i < 2000; i++){
-    candles = await oanda.getCandlesByRange('EUR_USD', upTo, api_key);
+  let currentDate = maxDate;
+  let currentDateString = (!!maxDate) ? maxDate.toISOString() : null;
+  do{
+    candles = await oanda.getCandlesByRange(instrument, currentDateString, key);
     console.log(candles);
-    upTo = candles.slice(-1)[0].time;
-    storage.pipeToCSV(`${resorceName}.csv`, candles, headers)
-  }
+    currentDateString = candles.slice(-1)[0].time;
+    currentDate = new Date(currentDateString);
+    storage.pipeToCSV(filename, candles, headers)
+  } while (minDate < currentDate);
 }
 
-main().catch(e => {
-  console.log(e);
-});
-
-
-/*
-  .then(candles => {
-    console.log(new Date(Date.now()));
-    console.log(new Date(candles[0].time));
-  }).catch(err => {
-    console.log(err);
-    console.log("Error");
-  });
-*/
+module.exports = main;
